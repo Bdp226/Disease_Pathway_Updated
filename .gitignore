@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+myenv/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Node
+frontend/disease-pathways/node_modules/
+frontend/disease-pathways/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local databases and generated artifacts
+*.db
+output/
+vector_stores/
+
+# Logs
+*.log
