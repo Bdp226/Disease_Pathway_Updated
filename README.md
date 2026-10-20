@@ -66,7 +66,7 @@ If you want a quick summary of what was actually done recently, this is the simp
 
 ## FAANG-Relevant Engineering Impact (SDE Scorecard)
 
-This section reframes project outcomes in FAANG-style software engineering terms: availability, latency, correctness, release safety, and user trust.
+This section reframes project outcomes in domain-agnostic FAANG-style engineering terms: availability, latency, correctness, release safety, and user trust.
 
 ### Verified Quantitative Baseline (Session-Validated)
 
@@ -74,9 +74,9 @@ All values below were verified on a live local run on 2026-10-20.
 
 | Dimension | Metric | Verified Value | Why It Matters (SDE Lens) |
 | :--- | :--- | :--- | :--- |
-| Data Availability | Disease entities served | 3 (`Alzheimer's`, `CAD`, `Lung Cancer Staging`) | Confirms production data path is reachable and non-empty |
-| Domain Coverage | CAD stage count | 6 stages | Confirms full stage lifecycle is represented in API payload |
-| Domain Coverage | CAD visible pain points | 36 pain points | Indicates meaningful retrieval/UI payload scale vs toy data |
+| Data Availability | Catalog entities served | 3 entities | Confirms production data path is reachable and non-empty |
+| Domain Coverage | Lifecycle segments in primary entity | 6 segments | Confirms full lifecycle representation in API payload |
+| Domain Coverage | Visible issue records in primary entity | 36 records | Indicates meaningful retrieval/UI payload scale vs toy data |
 | Reliability | `GET /diseases` status | 200 | Core catalog endpoint is healthy |
 | Reliability | `POST /chat` status | 200 | Core chatbot endpoint is healthy |
 | Reliability | Canonical startup script | Implemented and validated | Removes inconsistent cold-start behavior across duplicate folders |
@@ -88,26 +88,26 @@ All values below were verified on a live local run on 2026-10-20.
 | Change Area | Before | After | Impact Type |
 | :--- | :--- | :--- | :--- |
 | Startup Determinism | Multiple start paths, stale process confusion | Single canonical launcher + nested redirect | Reliability / Ops Efficiency |
-| Chat Context Bias | Auto-context could lock to viewed disease | General mode default; disease focus only when explicit | Correctness / Trust |
+| Chat Context Bias | Auto-context could lock to viewed entity | General mode default; focused context only when explicit | Correctness / Trust |
 | Chat Streaming Compatibility | Mixed behavior across endpoints | `/chat/stream` + `/chat` fallback path validated | Resilience / UX Continuity |
-| Similarity Signal Quality | Generic pathway terms polluted overlap | Generic terms excluded in similarity logic | Retrieval Precision |
-| Stakeholder Icon Fidelity | Mixed icon families and fallback placeholders | Unified stakeholder icon style + fixed mappings | UX Quality / Perceived Professionalism |
+| Similarity Signal Quality | Generic shared terms polluted overlap | Generic terms excluded in similarity logic | Retrieval Precision |
+| Visual Consistency | Mixed icon families and fallback placeholders | Unified icon style + fixed mappings | UX Quality / Perceived Professionalism |
 
 ### Qualitative Impact (User + Engineering)
 
 | Audience | Qualitative Improvement | Why It Matters |
 | :--- | :--- | :--- |
-| End Users | Chatbot feels less robotic and less disease-biased | Improves trust and reduces confusion in first interaction |
+| End Users | Chatbot feels less robotic and less context-biased | Improves trust and reduces confusion in first interaction |
 | End Users | Card alignment and icon consistency are more professional | Better readability and stronger product polish |
 | Engineers | Fewer "works-on-my-machine" startup failures | Reduces support time and restart friction |
 | Engineers | Clearer single ownership for chat behavior | Faster debugging and lower regression risk |
-| Product/Research | Similarity results are more semantically meaningful | Better downstream analytics and decision support |
+| Product/Analytics | Similarity results are more semantically meaningful | Better downstream analytics and decision support |
 
 ### FAANG-Style SLO/SLI Framework (Recommended)
 
 | Service | SLI | Starter SLO | Error Budget Lens |
 | :--- | :--- | :--- | :--- |
-| Disease API | Successful 2xx rate for core read endpoints | >= 99.5% over 30 days | Budget burn triggers rollback/investigation |
+| Catalog API | Successful 2xx rate for core read endpoints | >= 99.5% over 30 days | Budget burn triggers rollback/investigation |
 | Chat API | Successful 2xx rate for `/chat` + `/chat/stream` | >= 99.0% over 30 days | Protects conversational continuity |
 | Chat Latency | p95 response latency (non-stream first token) | <= 2.5s | Guards user-perceived responsiveness |
 | Startup Reliability | Successful one-command boot from canonical script | >= 99% of attempts | Prevents operator productivity loss |
