@@ -83,6 +83,36 @@ All values below were verified on a live local run on 2026-10-20.
 | Latency (sample) | `GET /diseases` | 86 ms (single run) | Reasonable control-plane query latency for local stack |
 | Latency (sample) | `POST /chat` (greeting) | 73 ms (single run) | Fast-response path confirms low overhead for simple intents |
 
+### Before vs After Benchmark (FAANG-Style A/B)
+
+Benchmark target commits:
+
+- Before: `e409491`
+- After: `417211a`
+- Method: isolated Git worktrees, independent uvicorn instances per commit, repeated local requests with identical payloads.
+
+| Metric | Before (`e409491`) | After (`417211a`) | Delta | Impact |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET /diseases` success rate (n=30) | 100% | 100% | 0 pp | Reliability preserved |
+| `GET /diseases` p95 latency | 21.23 ms | 55.27 ms | +34.04 ms | Regression on control-plane read latency |
+| `POST /chat` success rate (n=30) | 100% | 100% | 0 pp | Reliability preserved |
+| `POST /chat` p95 latency | 20.82 ms | 52.33 ms | +31.51 ms | Regression on non-stream chat latency |
+| `POST /chat/stream` success rate (n=20) | 100% | 100% | 0 pp | Streaming reliability preserved |
+| `POST /chat/stream` p95 completion latency | 27,592.72 ms | 4,965.63 ms | -22,627.09 ms (-82.0%) | Major tail-latency improvement for streaming path |
+| `POST /search` success rate (n=15) | 100% | 100% | 0 pp | Retrieval reliability preserved |
+| `POST /search` p95 latency | 25.35 ms | 52.98 ms | +27.63 ms | Regression on search latency |
+
+FAANG-relevant interpretation:
+
+- Reliability SLO posture improved in consistency: all tested endpoints remained 100% successful before and after.
+- UX continuity improved strongly for stream consumers due to large p95 reduction on `/chat/stream`.
+- Latency budget risk increased on non-stream control paths (`/diseases`, `/chat`, `/search`) and should be treated as next optimization priority.
+
+Raw benchmark artifacts are stored at:
+
+- `output/faang_bench/bench_before.json`
+- `output/faang_bench/bench_after.json`
+
 ### Quantitative Product Outcomes from Recent Fixes
 
 | Change Area | Before | After | Impact Type |
