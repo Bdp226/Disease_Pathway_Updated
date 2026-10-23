@@ -44,6 +44,44 @@ If you want a quick summary of what was actually done recently, this is the simp
 - Better traceability of changes from July to October through commit-linked timeline.
 - Stronger base for KPI tracking, evaluation reporting, and enterprise hardening.
 
+## Latest Delivered Updates (Oct 2026)
+
+This section captures the most recent implementation work completed in the active development cycle.
+
+| Area | Delivered Update | Demonstrable Outcome |
+| :--- | :--- | :--- |
+| Chat UX | Added local chat thread history in chatbot (recent threads, restore thread, clear history). | Team can open chatbot, use `History`, restore previous threads, and verify session continuity. |
+| Chat UX Reliability | Fixed history popover stuck behavior with outside-click close + safe click propagation. | Clicking outside the popover closes it immediately without freezing modal interaction. |
+| Chat Context Control | Added `New chat` reset behavior tied to a new `session_id`. | Disease/context carry-over can be reset instantly for clean demos. |
+| MCP Integration | Added MCP-backed API endpoints in backend: `GET /mcp/tools`, `POST /mcp/tool`, `POST /mcp/chat`. | Team can verify tool discovery, direct tool execution, and tool-enabled chat via HTTP requests. |
+| MCP Stability | Added fallback path for `/mcp/chat` when local model call fails. | Endpoint remains demoable and returns grounded retrieval output instead of hard failure. |
+
+### MCP Demo-Proof Workflow (Team Ready)
+
+Use this sequence to produce objective pass/fail evidence in under a minute.
+
+1. Start updated backend instance:
+
+```powershell
+cd "Digitization-of-Disease-Pathways-main (1)"
+..\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8001
+```
+
+2. Run the proof script:
+
+```powershell
+cd "Digitization-of-Disease-Pathways-main (1)"
+.\mcp_demo_proof.ps1 -BaseUrl "http://127.0.0.1:8001" -Disease "cad"
+```
+
+3. Expected proof output:
+
+- Health check: `PASS`
+- MCP tools endpoint: `PASS`
+- Direct MCP tool call: `PASS`
+- MCP chat endpoint: `PASS`
+- Final line: `MCP integration proof: SUCCESS`
+
 ## Repository Goals
 
 | Goal | Description | Why It Matters |
